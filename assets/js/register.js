@@ -40,6 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Tampilkan loading sebelum permintaan dikirim
+      let loading;
+      Swal.fire({
+        title: "Mendaftar...",
+        text: "Harap tunggu sementara kami memproses permintaan Anda.",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+          loading = Swal;
+        },
+      });
+
       try {
         // Kirim permintaan ke endpoint register
         const response = await fetch(
@@ -59,6 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         const result = await response.json();
+
+        // Tutup loading
+        loading.close();
 
         if (response.ok) {
           emailGlobal = email; // Simpan email untuk proses OTP
@@ -102,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Error:", error);
+        loading.close(); // Tutup loading jika terjadi error
         Swal.fire({
           icon: "error",
           title: "Kesalahan",
@@ -142,6 +158,18 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
+        // Tampilkan loading sebelum permintaan dikirim
+        let loading;
+        Swal.fire({
+          title: "Verifikasi OTP...",
+          text: "Harap tunggu sementara kami memverifikasi OTP Anda.",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+            loading = Swal;
+          },
+        });
+
         try {
           const verifyResponse = await fetch(
             "https://backend-eight-phi-75.vercel.app/api/auth/verify-otp",
@@ -160,6 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const verifyResult = await verifyResponse.json();
           console.log("Verify Response:", verifyResult); // Debugging
 
+          // Tutup loading
+          loading.close();
+
           if (verifyResponse.ok) {
             Swal.fire({
               icon: "success",
@@ -177,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         } catch (error) {
           console.error("Error:", error);
+          loading.close(); // Tutup loading jika terjadi error
           Swal.fire({
             icon: "error",
             title: "Kesalahan",
