@@ -1,5 +1,6 @@
 let emailGlobal = "";
 
+// Event listener untuk tombol signup
 document
   .getElementById("signupButton")
   .addEventListener("click", async function () {
@@ -60,37 +61,27 @@ document
       if (response.ok) {
         emailGlobal = email; // Simpan email untuk proses verifikasi OTP
 
-        // Kirim permintaan OTP ke email
-        const otpResponse = await fetch(
-          "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-            }),
-          }
-        );
+        // Jika backend mengembalikan OTP
+        const otpCode = result.otp; // Asumsikan respons backend memiliki properti 'otp'
 
-        const otpResult = await otpResponse.json();
+        // Tampilkan OTP di konsol (hanya untuk debugging, jangan gunakan di produksi)
+        console.log("Kode OTP:", otpCode);
 
-        if (otpResponse.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
-          }).then(() => {
-            window.location.href = "/register/OTP"; // Halaman verifikasi OTP
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Gagal",
-            text: otpResult.message || "Gagal mengirim OTP.",
-          });
-        }
+        // (Opsional) Tampilkan OTP di UI untuk pengujian
+        Swal.fire({
+          icon: "info",
+          title: "Debugging OTP",
+          text: `Kode OTP: ${otpCode}`,
+        });
+
+        // Kirim pengguna ke halaman verifikasi OTP
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
+        }).then(() => {
+          window.location.href = "/register/OTP";
+        });
       } else {
         Swal.fire({
           icon: "error",
@@ -108,18 +99,19 @@ document
     }
   });
 
-// Tambahkan fungsi untuk verifikasi OTP
+// Fungsi untuk verifikasi OTP
 if (window.location.pathname === "/register/OTP") {
   document
     .getElementById("verifyOtpButton")
     .addEventListener("click", async function () {
-      const otpCode = document.getElementById("otpCode").value;
+      const otpInputs = Array.from(document.querySelectorAll(".otp-input"));
+      const otpCode = otpInputs.map((input) => input.value).join(""); // Gabungkan nilai input OTP
 
-      if (!otpCode) {
+      if (otpCode.length !== 6) {
         Swal.fire({
           icon: "warning",
           title: "Peringatan",
-          text: "Harap masukkan kode OTP!",
+          text: "Harap masukkan kode OTP yang valid (6 digit)!",
         });
         return;
       }
@@ -147,7 +139,7 @@ if (window.location.pathname === "/register/OTP") {
             title: "Berhasil",
             text: "Verifikasi berhasil! Anda akan diarahkan ke halaman login.",
           }).then(() => {
-            window.location.href = "/login"; // Halaman login
+            window.location.href = "/login";
           });
         } else {
           Swal.fire({
