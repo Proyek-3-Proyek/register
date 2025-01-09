@@ -1,6 +1,4 @@
-const modal = document.getElementById("modalAlert");
-const closeModal = document.getElementById("closeModal");
-const modalMessage = document.getElementById("modalMessage");
+let emailGlobal = "";
 
 document
   .getElementById("signupButton")
@@ -13,28 +11,34 @@ document
 
     // Validasi input
     if (!email || !username || !password || !confirmPassword || !noHp) {
-      modalMessage.textContent = "Harap isi semua data!";
-      modal.classList.remove("hidden"); // Tampilkan modal error
+      Swal.fire({
+        icon: "warning",
+        title: "Peringatan",
+        text: "Harap isi semua data!",
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      modalMessage.textContent = "Password tidak sesuai!";
-      modal.classList.remove("hidden"); // Tampilkan modal error
+      Swal.fire({
+        icon: "error",
+        title: "Peringatan",
+        text: "Password tidak sesuai!",
+      });
       return;
     }
 
-    // Validasi format nomor HP (opsional)
-    const phoneRegex = /^[0-9]{10,13}$/; // Format: hanya angka, panjang 10-13 karakter
+    const phoneRegex = /^[0-9]{10,13}$/;
     if (!phoneRegex.test(noHp)) {
-      modalMessage.textContent =
-        "Nomor HP tidak valid! Gunakan format angka 10-13 digit.";
-      modal.classList.remove("hidden"); // Tampilkan modal error
+      Swal.fire({
+        icon: "error",
+        title: "Peringatan",
+        text: "Nomor HP tidak valid! Gunakan format angka 10-13 digit.",
+      });
       return;
     }
 
     try {
-      // Kirim permintaan POST ke endpoint register backend
       const response = await fetch(
         "https://backend-eight-phi-75.vercel.app/api/auth/register",
         {
@@ -44,9 +48,9 @@ document
           },
           body: JSON.stringify({
             email,
-            nama: username, // Sesuaikan dengan backend yang menerima "nama"
+            nama: username,
             password,
-            no_hp: noHp, // Kirim nomor HP yang dimasukkan user
+            no_hp: noHp,
           }),
         }
       );
@@ -54,21 +58,111 @@ document
       const result = await response.json();
 
       if (response.ok) {
-        // Jika berhasil, alihkan ke halaman login
-        alert("Pendaftaran berhasil! Anda akan diarahkan ke halaman login.");
-        window.location.href = "/login";
+        emailGlobal = email; // Simpan email untuk proses verifikasi OTP
+
+        // Kirim permintaan OTP ke email
+        const otpResponse = await fetch(
+          "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+            }),
+          }
+        );
+
+        const otpResult = await otpResponse.json();
+
+        if (otpResponse.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
+          }).then(() => {
+            window.location.href = "/verify-otp.html"; // Halaman verifikasi OTP
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: otpResult.message || "Gagal mengirim OTP.",
+          });
+        }
       } else {
-        // Jika gagal, tampilkan pesan error dari backend
-        modalMessage.textContent = result.message || "Pendaftaran gagal!";
-        modal.classList.remove("hidden"); // Tampilkan modal error
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: result.message || "Pendaftaran gagal!",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      modalMessage.textContent = "Terjadi kesalahan pada server.";
-      modal.classList.remove("hidden"); // Tampilkan modal error
+      Swal.fire({
+        icon: "error",
+        title: "Kesalahan",
+        text: "Terjadi kesalahan pada server.",
+      });
     }
   });
 
-closeModal.addEventListener("click", function () {
-  modal.classList.add("hidden"); // Sembunyikan modal error
-});
+// Tambahkan fungsi untuk verifikasi OTP
+if (window.location.pathname === "/verify-otp.html") {
+  document
+    .getElementById("verifyOtpButton")
+    .addEventListener("click", async function () {
+      const otpCode = document.getElementById("otpCode").value;
+
+      if (!otpCode) {
+        Swal.fire({
+          icon: "warning",
+          title: "Peringatan",
+          text: "Harap masukkan kode OTP!",
+        });
+        return;
+      }
+
+      try {
+        const verifyResponse = await fetch(
+          "https://backend-eight-phi-75.vercel.app/api/auth/verify-otp",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: emailGlobal,
+              otp: otpCode,
+            }),
+          }
+        );
+
+        const verifyResult = await verifyResponse.json();
+
+        if (verifyResponse.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Verifikasi berhasil! Anda akan diarahkan ke halaman login.",
+          }).then(() => {
+            window.location.href = "/login"; // Halaman login
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: verifyResult.message || "Kode OTP tidak valid!",
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Kesalahan",
+          text: "Terjadi kesalahan pada server.",
+        });
+      }
+    });
+}
