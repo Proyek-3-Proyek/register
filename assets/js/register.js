@@ -82,7 +82,7 @@ document
             title: "Berhasil",
             text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
           }).then(() => {
-            window.location.href = "/verify-otp.html"; // Halaman verifikasi OTP
+            window.location.href = "/register/OTP"; // Halaman verifikasi OTP
           });
         } else {
           Swal.fire({
@@ -109,7 +109,7 @@ document
   });
 
 // Tambahkan fungsi untuk verifikasi OTP
-if (window.location.pathname === "/verify-otp.html") {
+if (window.location.pathname === "/register/OTP") {
   document
     .getElementById("verifyOtpButton")
     .addEventListener("click", async function () {
