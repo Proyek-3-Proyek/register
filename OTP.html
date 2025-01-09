@@ -6,6 +6,8 @@
     <title>OTP Verification</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./assets/css/styles.css" />
+    <script src="./assets/js/register.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body class="body_primary flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-sm">
@@ -18,48 +20,55 @@
       <p class="text-gray-500 text-sm text-center mb-6">
         Masukkan kode OTP yang telah dikirim ke email Anda.
       </p>
-      <form>
+      <form id="otpForm">
         <div class="flex justify-center gap-2 mb-6">
           <!-- Input OTP -->
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp1"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp2"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp3"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp4"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp5"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
           <input
             type="text"
             maxlength="1"
-            class="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
+            id="otp6"
+            class="otp-input w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 focus:outline-none"
             required
           />
         </div>
         <button
-          type="submit"
+          type="button"
+          id="verifyOtpButton"
           class="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-offset-2"
         >
           Verifikasi
@@ -68,7 +77,9 @@
       <div class="mt-4 text-center">
         <p class="text-sm text-gray-500">
           Tidak menerima kode?
-          <a href="#" class="text-blue-500 hover:underline">Kirim ulang</a>
+          <a href="#" id="resendOtp" class="text-blue-500 hover:underline"
+            >Kirim ulang</a
+          >
         </p>
       </div>
     </div>
