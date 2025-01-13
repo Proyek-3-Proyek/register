@@ -91,61 +91,61 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Event Listener untuk Kirim Ulang OTP
-  const resendButton = document.getElementById("resendOtp");
-  if (resendButton) {
-    resendButton.addEventListener("click", async function () {
-      // Tampilkan loading sebelum permintaan dikirim
-      let loading;
-      Swal.fire({
-        title: "Mengirim ulang OTP...",
-        text: "Harap tunggu sementara kami mengirim ulang OTP ke email Anda.",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-          loading = Swal;
-        },
-      });
+  // // Event Listener untuk Kirim Ulang OTP
+  // const resendButton = document.getElementById("resendOtp");
+  // if (resendButton) {
+  //   resendButton.addEventListener("click", async function () {
+  //     // Tampilkan loading sebelum permintaan dikirim
+  //     let loading;
+  //     Swal.fire({
+  //       title: "Mengirim ulang OTP...",
+  //       text: "Harap tunggu sementara kami mengirim ulang OTP ke email Anda.",
+  //       allowOutsideClick: false,
+  //       didOpen: () => {
+  //         Swal.showLoading();
+  //         loading = Swal;
+  //       },
+  //     });
 
-      try {
-        const resendResponse = await fetch(
-          "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: emailGlobal }),
-          }
-        );
+  //     try {
+  //       const resendResponse = await fetch(
+  //         "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({ email: emailGlobal }),
+  //         }
+  //       );
 
-        const resendResult = await resendResponse.json();
+  //       const resendResult = await resendResponse.json();
 
-        // Tutup loading setelah respons diterima
-        loading.close();
+  //       // Tutup loading setelah respons diterima
+  //       loading.close();
 
-        if (resendResponse.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "OTP berhasil dikirim ulang ke email Anda.",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Gagal",
-            text: resendResult.message || "Gagal mengirim ulang OTP.",
-          });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        loading.close(); // Tutup loading jika terjadi error
-        Swal.fire({
-          icon: "error",
-          title: "Kesalahan",
-          text: "Terjadi kesalahan pada server.",
-        });
-      }
-    });
-  }
+  //       if (resendResponse.ok) {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Berhasil",
+  //           text: "OTP berhasil dikirim ulang ke email Anda.",
+  //         });
+  //       } else {
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Gagal",
+  //           text: resendResult.message || "Gagal mengirim ulang OTP.",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //       loading.close(); // Tutup loading jika terjadi error
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Kesalahan",
+  //         text: "Terjadi kesalahan pada server.",
+  //       });
+  //     }
+  //   });
+  // }
 });
