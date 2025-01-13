@@ -79,35 +79,13 @@ document.addEventListener("DOMContentLoaded", () => {
           emailGlobal = email; // Simpan email untuk proses OTP
           localStorage.setItem("email", email); // Simpan di localStorage
 
-          // Kirim OTP ke email
-          const otpResponse = await fetch(
-            "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email }),
-            }
-          );
-
-          const otpResult = await otpResponse.json();
-
-          if (otpResponse.ok) {
-            Swal.fire({
-              icon: "success",
-              title: "Berhasil",
-              text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
-            }).then(() => {
-              window.location.href = "/register/OTP"; // Halaman verifikasi OTP
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Gagal",
-              text: otpResult.message || "Gagal mengirim OTP.",
-            });
-          }
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Pendaftaran berhasil! Silakan verifikasi email Anda.",
+          }).then(() => {
+            window.location.href = "/register/OTP"; // Halaman verifikasi OTP
+          });
         } else {
           Swal.fire({
             icon: "error",
@@ -209,47 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
           console.error("Error:", error);
           loading.close(); // Tutup loading jika terjadi error
-          Swal.fire({
-            icon: "error",
-            title: "Kesalahan",
-            text: "Terjadi kesalahan pada server.",
-          });
-        }
-      });
-
-    // Event Listener untuk Kirim Ulang OTP
-    document
-      .getElementById("resendOtp")
-      .addEventListener("click", async function () {
-        try {
-          const resendResponse = await fetch(
-            "https://backend-eight-phi-75.vercel.app/api/auth/request-reset-password",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email: emailGlobal }),
-            }
-          );
-
-          const resendResult = await resendResponse.json();
-
-          if (resendResponse.ok) {
-            Swal.fire({
-              icon: "success",
-              title: "Berhasil",
-              text: "OTP berhasil dikirim ulang ke email Anda.",
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Gagal",
-              text: resendResult.message || "Gagal mengirim ulang OTP.",
-            });
-          }
-        } catch (error) {
-          console.error("Error:", error);
           Swal.fire({
             icon: "error",
             title: "Kesalahan",
